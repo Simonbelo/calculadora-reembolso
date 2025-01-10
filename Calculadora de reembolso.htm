@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Desconto de Reembolso</title>
+    <link rel="icon" href=""Z:\Simon\6119Hal-HeL._AC_UF894_1000_QL80_.ico"">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2C2F36; /* Fundo escuro */
+            color: #fff;
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            padding: 50px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .container {
+            padding: 30px;
+            background: #333333; /* Fundo escuro para as calculadoras */
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            flex: 1 1 400px;
+            min-width: 320px;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        .container h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #f1f1f1;
+        }
+
+        .container:nth-child(1) {
+            background-color: #3A3F47; /* Cor mais suave para a primeira calculadora */
+        }
+
+        .container:nth-child(2) {
+            background-color: #4A4E56; /* Cor mais clara para a segunda calculadora */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #f1f1f1;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #555;
+            background-color: #222;
+            color: #fff;
+            box-sizing: border-box;
+            transition: border 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #00B0FF; /* Azul suave ao focar */
+            outline: none;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: #00B0FF; /* Azul claro para o botão */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .button:hover {
+            background: #0078D4; /* Azul mais escuro ao passar o mouse */
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #555;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            text-align: center;
+        }
+
+        .valor-grupo {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .valor-grupo input {
+            flex: 1;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #555;
+            background-color: #222;
+            color: #fff;
+        }
+
+        .valor-grupo button {
+            padding: 14px;
+            background: #dc3545; /* Vermelho para o botão de remover */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .valor-grupo button:hover {
+            background: #a71d2a; /* Vermelho mais escuro ao passar o mouse */
+        }
+
+        .total-soma {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #f1f1f1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">CAUCULADORA DE REEMBOLSO - RECURSOS HUMANOS SERVIÇO SOCIAL</div>
+
+    <div class="main-container">
+        <!-- Calculadora de Percentual de Desconto -->
+        <div class="container">
+            <h1>Percentual de Desconto</h1>
+            <div class="form-group">
+                <label for="totalNota">Total da Nota (R$):</label>
+                <input type="number" id="totalNota" placeholder="Digite o valor total da nota" onkeydown="verificarEnterDesconto(event)">
+            </div>
+            <div class="form-group">
+                <label for="totalDesconto">Total com Desconto (R$):</label>
+                <input type="number" id="totalDesconto" placeholder="Digite o valor com desconto" onkeydown="verificarEnterDesconto(event)">
+            </div>
+            <button class="button" onclick="calcularDesconto()">Calcular Percentual</button>
+            <div class="result" id="resultado"></div>
+        </div>
+
+        <!-- Calculadora de Valor com Desconto -->
+        <div class="container">
+            <h1>Valor com Desconto</h1>
+            <div id="valoresContainer">
+                <div class="form-group valor-grupo">
+                    <input type="number" class="valorInicial" placeholder="Digite o valor inicial" oninput="calcularValoresComDesconto()" onkeypress="verificarEnter(event)">
+                    <button onclick="removerValor(this)">Remover</button>
+                </div>
+            </div>
+            <button class="button" onclick="adicionarValor()">Adicionar Valor</button>
+            <div class="form-group">
+                <label for="percentualDesconto">Percentual de Desconto (%):</label>
+                <input type="number" id="percentualDesconto" placeholder="Percentual calculado" readonly>
+            </div>
+            <div class="result" id="resultadoValores"></div>
+            <div class="total-soma" id="totalSoma">Soma Total: R$ 0,00</div>
+        </div>
+    </div>
+
+    <script>
+        // Verifica o pressionamento de Enter
+        function verificarEnterDesconto(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                calcularDesconto();
+            }
+        }
+
+        // Função para calcular o percentual de desconto
+        function calcularDesconto() {
+            const totalNota = parseFloat(document.getElementById('totalNota').value);
+            const totalDesconto = parseFloat(document.getElementById('totalDesconto').value);
+
+            if (isNaN(totalNota) || isNaN(totalDesconto) || totalNota <= 0 || totalDesconto < 0 || totalDesconto > totalNota) {
+                document.getElementById('resultado').innerText = "Por favor, insira valores válidos.";
+                document.getElementById('percentualDesconto').value = '';
+                document.getElementById('resultadoValores').innerText = "";
+                return;
+            }
+
+            const desconto = ((totalNota - totalDesconto) / totalNota) * 100;
+            document.getElementById('resultado').innerText = 
+                `O desconto aplicado foi de ${desconto.toFixed(2)}%.`;
+
+            // Atualiza automaticamente o percentual na segunda calculadora
+            document.getElementById('percentualDesconto').value = desconto.toFixed(2);
+            
+            // Atualiza o cálculo dos valores iniciais na segunda calculadora
+            calcularValoresComDesconto();
+        }
+
+        // Função para adicionar novos valores na segunda calculadora
+        function adicionarValor() {
+            const valoresContainer = document.getElementById('valoresContainer');
+            const valorGrupo = document.createElement('div');
+            valorGrupo.className = 'form-group valor-grupo';
+            valorGrupo.innerHTML = ` 
+                <input type="number" class="valorInicial" placeholder="Digite o valor inicial" oninput="calcularValoresComDesconto()" onkeypress="verificarEnter(event)">
+                <button onclick="removerValor(this)">Remover</button>
+            `;
+            valoresContainer.appendChild(valorGrupo);
+        }
+
+        // Função para remover valores da segunda calculadora
+        function removerValor(botao) {
+            const valoresContainer = document.getElementById('valoresContainer');
+            valoresContainer.removeChild(botao.parentElement);
+            calcularValoresComDesconto();
+        }
+
+        // Função para calcular os valores com o desconto aplicado
+        function calcularValoresComDesconto() {
+            const percentualDesconto = parseFloat(document.getElementById('percentualDesconto').value);
+            if (isNaN(percentualDesconto) || percentualDesconto < 0) {
+                document.getElementById('resultadoValores').innerText = "Por favor, insira um percentual válido.";
+                return;
+            }
+
+            const valoresIniciais = document.querySelectorAll('.valorInicial');
+            let resultadoTexto = "";
+            let somaTotal = 0;
+
+            valoresIniciais.forEach((input, index) => {
+                const valorInicial = parseFloat(input.value);
+                if (!isNaN(valorInicial) && valorInicial > 0) {
+                    const valorFinal = valorInicial - (valorInicial * (percentualDesconto / 100));
+                    resultadoTexto += `Valor ${index + 1}: R$ ${valorFinal.toFixed(2)}<br>`;
+                    somaTotal += valorFinal;
+                }
+            });
+
+            document.getElementById('resultadoValores').innerHTML = resultadoTexto || "Nenhum valor calculado.";
+            document.getElementById('totalSoma').innerText = `Soma Total: R$ ${somaTotal.toFixed(2)}`;
+        }
+
+        // Verifica se pressionou Enter nos campos de valor inicial
+        function verificarEnter(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                calcularValoresComDesconto();
+            }
+        }
+    </script>
+</body>
+</html>
